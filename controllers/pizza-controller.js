@@ -5,22 +5,46 @@ const pizzaController = {
   // get all pizzas: GET /api/pizzas
   getAllPizza(req, res) {
     Pizza.find({})
+      //This is to show comment contents (rather than just comment id)
+      .populate({
+        path: 'comments',
+        //tell Mongoose that we don't care about the __v field on comments. 
+        //The '-' in front of '__v' indicates that we don't want it to be returned. 
+        //If we didn't have it, it would mean that it would return only the __v field.
+        select: '-__v'
+      })
+      //to not include the pizza's __v field either
+      .select('-__v')
+      //to sort in DESC order by the _id value
+      .sort({ _id: -1 })
       .then(dbPizzaData => res.json(dbPizzaData))
       .catch(err => {
         console.log(err);
-        res.sendStatus(400);
+        res.status(400).json(err);
       });
   },
 
   // get one pizza by id: GET /api/pizzas/:id
+  // get one pizza by id
   getPizzaById({ params }, res) {
     Pizza.findOne({ _id: params.id })
-      .then(dbPizzaData => res.json(dbPizzaData))
+      .populate({
+        path: 'comments',
+        select: '-__v'
+      })
+      .select('-__v')
+      .then(dbPizzaData => {
+        if (!dbPizzaData) {
+          res.status(404).json({ message: 'No pizza found with this id!' });
+          return;
+        }
+        res.json(dbPizzaData);
+      })
       .catch(err => {
         console.log(err);
-        res.sendStatus(400);
+        res.status(400).json(err);
       });
-  },
+},
 
   // createPizza: POST /api/pizzas
   // In MongoDB, the methods for adding data to a collection are .insertOne() or .insertMany(). 
