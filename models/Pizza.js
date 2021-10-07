@@ -13,6 +13,8 @@ const PizzaSchema = new Schema(
       type: Date,
       default: Date.now,
       // add getters to format dateFormat (like middleware)
+      // MongoDB operates on a find-or-create mentality in that if it finds the database you want to connect to, it'll use it. 
+      // If not, it'll simply create the database.
       get: (createdAtVal) => dateFormat(createdAtVal)
     },
     size: {
@@ -44,7 +46,12 @@ const PizzaSchema = new Schema(
 
 // Virtual: get total count of comments and replies on retrieval
 PizzaSchema.virtual('commentCount').get(function() {
-  return this.comments.length;
+  //using the .reduce() method to tally up the total of every comment with its replies. 
+  //  In its basic form, .reduce() takes two parameters, an 'accumulator' (total) and a 'currentValue' (comment). 
+  //  As .reduce() walks through the array, it passes the accumulating total and the current value of comment into the function, 
+  //  with the return of the function revising the total for the next iteration through the array.
+  //  The built-in .reduce() method is great for calculating a value based off of the accumulation of values in an array vs .map.
+  return this.comments.reduce((total, comment) => total + comment.replies.length + 1, 0);
 });
 
 // create the Pizza model using the PizzaSchema

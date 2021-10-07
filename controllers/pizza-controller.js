@@ -6,6 +6,7 @@ const pizzaController = {
   getAllPizza(req, res) {
     Pizza.find({})
       //This is to show comment contents (rather than just comment id)
+      //Get the full document from a different document.
       .populate({
         path: 'comments',
         //tell Mongoose that we don't care about the __v field on comments. 
