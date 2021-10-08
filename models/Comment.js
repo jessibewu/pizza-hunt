@@ -7,16 +7,21 @@ const dateFormat = require('../utils/dateFormat');
 
 const ReplySchema = new Schema(
     {
-      // With the 'Types' object imported: set custom id to avoid confusion with parent comment _id
+      // With the 'Types' object imported: 
+      // set custom id to avoid confusion with parent comment _id
       replyId: {
         type: Schema.Types.ObjectId,
         default: () => new Types.ObjectId()
       },
       replyBody: {
-        type: String
+        type: String,
+        required: 'You need to provide a reply!', // or 'true'
+        trim: true
       },
       writtenBy: {
-        type: String
+        type: String,
+        required: 'You need to provide your name!', // or 'true'
+        trim: true
       },
       createdAt: {
         type: Date,
@@ -33,10 +38,14 @@ const ReplySchema = new Schema(
 
 const CommentSchema = new Schema({
     writtenBy: {
-      type: String
+      type: String,
+      required: 'You need to provide your name!', // or 'true'
+      trim: true
     },
     commentBody: {
-      type: String
+      type: String,
+      required: 'You need to provide a comment!', // or 'true'
+      trim: true
     },
     createdAt: {
       type: Date,

@@ -4,10 +4,14 @@ const dateFormat = require('../utils/dateFormat');
 const PizzaSchema = new Schema(
   {
     pizzaName: {
-      type: String
+      type: String,
+      required: 'You need to provide a pizza name!', // or 'true'
+      trim: true
     },
     createdBy: {
-      type: String
+      type: String,
+      required: true,
+      trim: true
     },
     createdAt: {
       type: Date,
@@ -19,6 +23,12 @@ const PizzaSchema = new Schema(
     },
     size: {
       type: String,
+      //If you were to provide a custom error message for the required option here, you wouldn't receive it if you provide a size that isn't listed in the enum option. 
+      //If you want to provide a custom message for enumerable values, you need to look into implementing the 'validate option' Mongoose lets you use, where you can create a custom function to test the values, just like you did with Inquirer
+      required: true,
+      //enumerable: refers to a set of data that can be iterated over— like the for...in loop to iterate through an object
+      // provides an array of options that this size field will only accept
+      enum: ['Personal', 'Small', 'Medium', 'Large', 'Extra Large'],
       default: 'Large'
     },
     toppings: [], // or put Array
