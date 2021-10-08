@@ -68,6 +68,8 @@ const handlePizzaSubmit = event => {
     })
     .catch(err => {
       console.log(err);
+      // connect to the idb.js's saveRecord() when there's network issue
+      saveRecord(formData);
     });
 };
 
